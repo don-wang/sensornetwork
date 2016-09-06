@@ -121,7 +121,6 @@ def listening():
 # Open new thread for Listening function
 listen = Thread(target=listening,name="ListenSensor")
 listen.daemon = True
-listen.start()
 
 @app.route('/')
 @app.route('/index')
@@ -207,3 +206,5 @@ def disconnect():
 def error_handler(e):
     print e
 
+
+listen.start()
