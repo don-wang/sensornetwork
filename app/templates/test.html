@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+
+<script type="text/javascript" src="{{ url_for('static', filename='test.js') }}"></script>
+{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <a name="demo"></a><h1>SocketIO Test<small></small></h1>
+  <blockquote class="bg-info">
+    Current Namespace:<span class="label label-primary">[[result]]</span>  <br>
+    <p id="data">
+    </p>
+</blockquote>
+<!--   <div id="panel" class="row">
+    <div class="form-group col-sm-3">
+          <label>Averaging times:</label>
+          <select class="form-control" ng-model="avewindow" ng-change="changeAve()">
+            <option>1</option>
+            <option>10</option>
+            <option>40</option>
+            <option>100</option>
+          </select>
+
+          <label>Y-axis Range: <span class="badge">[[range]] Pa</span></label>
+          <input type="range" name="points" min="10" max="1000" step="20" ng-model="range">
+          <label>Center Value:</label>
+          <input type="number" class="form-control" ng-model="middle">
+    </div>
+</div> -->
+</div>
+
+<div class="panel panel-default  col-md-12">
+  <div class="panel-heading">
+    <h3 class="panel-title">Raw Data</h3>
+</div>
+<div  class="panel-body">
+    <div class="input-group">
+      <div class="input-group-addon" >Namespace to check: </div>
+      <input type="text" class="form-control" id="namepace" ng-model="namespace" value="[[namespace]]" >
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button" ng-click="changeNamespace(namespace)">Save</button>
+      </span>
+    </div>
+    [[data]]
+</div>
+</div>
+
+<div id="log"></div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+<script type="text/javascript" src="{{ url_for('static', filename='client.js') }}"></script>
+{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <a name="demo"></a><h1>Integreated Sensor Network<small></small></h1>
+  <blockquote class="bg-info">
+      Connected Sensors: <span class="label label-primary"> [[counts]]</span>  <br>
+      <p id="data">
+      </p>
+  </blockquote>
+
+</div>
+
+<div class="panel panel-default  col-md-12 panel-success">
+  <div class="panel-heading">
+    <h3 class="panel-title">Sensor Status</h3>
+</div>
+<div  class="panel-body">
+    <div class="table-responsive">
+      <table class="table table-condensed table-hover">
+        <tr>
+          <th>BT MAC</th>
+          <th>Seq No.</th>
+          <th>Last Update</th>
+          <th>Lightness</th>
+          <th>Noise</th>
+          <th>Temperature</th>
+          <th>Humidity</th>
+          <th>Distance</th>
+          <th>GateWay</th>
+          <th>Battery</th>
+        </tr>
+        <tr ng-repeat="sensor in sensors">
+          <td>[[parseData(sensor.data).btAddress]]</td>
+          <td>[[parseData(sensor.data).seqNum]]</td>
+          <td>[[parseData(sensor.data).tick_last_update]]</td>
+          <td>[[parseData(sensor.data).val_light]]</td>
+          <td>[[parseData(sensor.data).val_noise]]</td>
+          <td>[[parseData(sensor.data).val_temp]]</td>
+          <td>[[parseData(sensor.data).val_humi]]</td>
+          <td>[[parseData(sensor.data).distance]]</td>
+          <td>[[parseData(sensor.data).gateway]]</td>
+          <td>[[parseData(sensor.data).val_battery]]</td>
+        </tr>
+      </table>
+    </div>
+</div>
+</div>
+<div class="col-md-6">
+    <img class="img-responsive portfolio-item" src="http://131.113.136.13/nphMotionJpeg?Resolution=640x480&Quality=Standard" alt="">
+</div>
+
+<div id="log"></div>
+{% endblock %}
