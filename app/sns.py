@@ -26,8 +26,8 @@ DEBUG = False
 INFINITE_LOOP = True
 USE_FLUENTD = False
 # True : use fluentd to upload data, False : directly upload data to influxDB
-SINGLE_LOOP_COUNT = 3
-LOOP_COUNT = 10
+SINGLE_LOOP_COUNT = 5
+LOOP_COUNT =  5
 # If INIFINITE_LOOP = False, Total aquired packet would be (SINGLE_LOOP_COUNT * LOOP_COUNT)
 
 CHECK_SENSOR_STATE_INTERVAL_SECONDS = 10

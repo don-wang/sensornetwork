@@ -48,10 +48,23 @@ sensorConf = {""}
 def listening():
     # global newTask
     while True:
-        node =1
         dataSet = []
         returnedList = getData()
         for sensors in returnedList:
+            if sensors.btAddress != "EBF78C6BC38E" and sensors.btAddress != "DDBAB3016E8C" and sensors.btAddress != "C35799CED2EA" and sensors.btAddress !="E2068C2BFF0C" and sensors.btAddress != "F8290B7902A5":
+                print sensors.btAddress
+                print "not required sensor, pass"
+                continue
+            if sensors.btAddress == "EBF78C6BC38E":
+                node=1
+            if sensors.btAddress == "E2068C2BFF0C":
+                node=2
+            if sensors.btAddress == "DDBAB3016E8C":
+                node=3
+            if sensors.btAddress == "F8290B7902A5":
+                node=4
+            if sensors.btAddress == "C35799CED2EA":
+                node=5
             sample = {"btAddress": sensors.btAddress, "id": "node" + str(node)}
             if senList.has_key(sensors.btAddress) == False:                
                 senList[sensors.btAddress] = sample
@@ -99,15 +112,14 @@ def listening():
 
 
             socketio.emit('push', json.dumps(lineData), namespace='/node' + str(node))
-            socketio.emit('newData', json.dumps(lineData), namespace='/main')
             print "--------------------"
             print "pushed to Namespace: "            
             print 'node' + str(node)
             print "--------------------"
-            node = node + 1
                 # socketio.emit('push', json.dumps(line), namespace='/' + namespace)            
             # dataSet = {"btAd" : str(sensors.btAddress), "temp": str(sensors.val_temp)}
             socketio.emit('senList', json.dumps(senList), namespace='/main')
+            print "pushed to main"
             # socketio.emit('push', json.dumps(senList), namespace='/main')            
             # senList.append(sample)
             # print "current light is " + str(sensors.val_light)
@@ -145,22 +157,28 @@ def change(data):
 
 @socketio.on('connect', namespace='/node1')
 def node1():
+    print "start node1"
+    print "\n"
     pass
 
 @socketio.on('connect', namespace='/node2')
 def node2():
+    print "start node2"
     pass
 
 @socketio.on('connect', namespace='/node3')
 def node3():
+    print "start node3"
     pass
 
 @socketio.on('connect', namespace='/node4')
 def node4():
+    print "start node4"
     pass
 
 @socketio.on('connect', namespace='/node5')
 def node5():
+    print "start node5"
     pass
 
 @socketio.on('my event')
@@ -183,7 +201,7 @@ def connect():
     global clients
     clients += 1
     print clients, "Clients Connected"
-    # emit('connect',1)
+    emit('connect',1)
     # Start listening Thread if not exist
     # print listen.isAlive()
     # if listen.isAlive() == False:
@@ -191,7 +209,7 @@ def connect():
     #     print "Start listening to Sensor"
     # else:
     #     print "Listening Thread already started"
-        # emit('status', {'msg': 'Connected', 'count': 0})
+    #     emit('status', {'msg': 'Connected', 'count': 0})
 
 @socketio.on('disconnect', namespace='/main')
 def disconnect():
