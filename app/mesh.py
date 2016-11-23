@@ -113,7 +113,6 @@ def Tx_WriteIndexClear():
 
 def meshDataReceived():
     global procedureNum
-    senList = {}
     rxBuf = [binascii.a2b_hex("FF")] * 255
     count = 0;
     lenBuf = 2;
@@ -121,7 +120,6 @@ def meshDataReceived():
     header = False;
     end = False;
     cmd = 0
-
     rxBuf[0] = meshser.read(1)
     rxBuf[1] = meshser.read(1)
 
@@ -163,15 +161,14 @@ def meshDataReceived():
             print "Read Register"
             if reg == meshHexStatic["INDEX"]:
                 procedureNum =  meshHexStatic["IN_DATA"]
-
-                return [senList, procedureNum]
+                return [None, procedureNum]
             elif reg == meshHexStatic["IN_DATA_1"]:
                 procedureNum = meshHexStatic["INDEX_CLEAR"]
 
                 if ord(rxBuf[4]) != 50:
                     print "Data empty, read again"
                     procedureNum =  meshHexStatic["IN_DATA"]
-                    return [senList, procedureNum]
+                    return [None, procedureNum]
                 addr = ord(rxBuf[11]) << 24 + ord(rxBuf[10]) << 16 +  ord(rxBuf[9]) << 8 + ord(rxBuf[8])
                 flag = False
                 for x in xrange(0, maxConnect):
@@ -198,23 +195,7 @@ def meshDataReceived():
                 meshData["press"][meshData["num"]] = float(((ord(rxBuf[24]) << 16) + (ord(rxBuf[23]) << 8) + ord(rxBuf[22]))) * 0.01
                 meshData["sound"][meshData["num"]] = float(((ord(rxBuf[26]) << 8) + ord(rxBuf[25]))) * 0.01
                 meshData["bat"][meshData["num"]] = float(((ord(rxBuf[54]) << 8) + ord(rxBuf[53]))) * 0.01
-                # print "bat"
-                # print float(((ord(rxBuf[54]) << 8) + ord(rxBuf[53]))) * 0.01
-                # print "bat"
-                
-                # print Data["time"][Data["num"]] 
-                # print Data["groupId"][Data["num"]]
-                # print Data["cmd"][Data["num"]]
-                # print Data["seqNum"][Data["num"]]
-                # print Data["status"][Data["num"]]
-                # print Data["temp"][Data["num"]]
-                # print Data["humi"][Data["num"]]
-                # print Data["light"][Data["num"]]
-                # print Data["press"][Data["num"]]
-                # print Data["sound"][Data["num"]]
-                # print Data["bat"][Data["num"]]
-                # seq = map(ord, rxBuf)
-                # print seq
+
                 sensorData = {
                     "time" : meshData["time"][meshData["num"]],
                     "groupId": meshData["groupId"][meshData["num"]],
@@ -228,32 +209,31 @@ def meshDataReceived():
                     "sound": meshData["sound"][meshData["num"]],
                     "bat": meshData["bat"][meshData["num"]]
                 }
-                senList[meshData["num"]] = sensorData
-                print senList
-                return [senList, procedureNum]
+                # senList[meshData["num"]] = sensorData
+                # print sensorData
+                return [sensorData, procedureNum]
 
         elif cmd == meshHexStatic["WRITE_REGISTER"]:
             print "write cmd"
             if reg == meshHexStatic["INDEX_CLR"]:
                 procedureNum = meshHexStatic["NONE"]
-            return [senList, procedureNum]
+            return [None, procedureNum]
         elif cmd == meshHexStatic["UPDATE_REGISTER"]:
             print "update cmd"
             procedureNum = meshHexStatic["P_INDEX"]
-            return [senList, procedureNum]
+            return [None, procedureNum]
         elif cmd == meshHexStatic["ERROR"]:
             print "error cmd"
-            return [senList, procedureNum]
+            return [None, procedureNum]
         elif cmd == meshHexStatic["WAKEUP"]:
             print "wake up cmd"
-            return [senList, meshHexStatic["NONE"]]
+            return [None, meshHexStatic["NONE"]]
         else:
             print "read failed"
-            return [senList, procedureNum]
+            return [None, procedureNum]
 
 def startMesh():
     global procedureNum
-    time.sleep(1)
     result = meshDataReceived()
     if result != None:
         meshList = result[0]
@@ -263,17 +243,16 @@ def startMesh():
     elif procedureNum == meshHexStatic["IN_DATA"]:
         Tx_ReadInData(1)
     elif procedureNum == meshHexStatic["INDEX_CLEAR"]:
-        print meshList
-        return meshList
         Tx_WriteIndexClear()
-        time.sleep(7)
+        return meshList
+    time.sleep(3)
     # else:
     #     Tx_WriteIndexClear()
 
 
 
 sensor = scan()[0]
-meshser = serial.Serial(sensor, 9600, timeout=10)
+meshser = serial.Serial(sensor, 9600, timeout=None)
     # print ord(cmd)
     # rcv = meshser.readline()
     # rcv = meshser.read(10)

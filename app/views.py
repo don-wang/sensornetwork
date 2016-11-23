@@ -129,19 +129,18 @@ def listening():
             global procedureNum
             global meshList
             # sensor = scan()[0]
-            meshser = serial.Serial(sensor, 9600, timeout=10)
+            meshser = serial.Serial(sensor, 9600, timeout=None)
             time.sleep(3)
             Tx_GwStart()
-
-
-            # if meshser.inWaiting() > 4:
             while  True:
                 meshData = startMesh()
                 if meshData != None:
+                    print meshData
                     socketio.emit('senList', json.dumps(meshData), namespace='/main')
                     socketio.emit('senList', json.dumps(meshData), namespace='/node1')
-                time.sleep(5)
-                
+                    socketio.emit('senList', json.dumps(meshData), namespace='/node3')
+                    socketio.emit('senList', json.dumps(meshData), namespace='/node5')
+
         elif module == "LoRa":
             global logFlag
             loraser = serial.Serial(sensor, 115200, timeout=None)
@@ -154,6 +153,8 @@ def listening():
 
                     socketio.emit('senList', json.dumps(senData), namespace='/main')
                     socketio.emit('senList', json.dumps(senData), namespace='/node1')
+                    socketio.emit('senList', json.dumps(senData), namespace='/node3')
+                    socketio.emit('senList', json.dumps(senData), namespace='/node5')
                 time.sleep(5)
 
 
@@ -187,7 +188,7 @@ def change(data):
 def node1():
     print "start node1"
     print "\n"
-    pass
+
 
 @socketio.on('connect', namespace='/node2')
 def node2():
@@ -197,7 +198,8 @@ def node2():
 @socketio.on('connect', namespace='/node3')
 def node3():
     print "start node3"
-    pass
+    print "\n"
+
 
 @socketio.on('connect', namespace='/node4')
 def node4():
@@ -207,7 +209,8 @@ def node4():
 @socketio.on('connect', namespace='/node5')
 def node5():
     print "start node5"
-    pass
+    print "\n"
+
 
 @socketio.on('my event')
 def test_message(message):
