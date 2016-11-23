@@ -34,16 +34,15 @@ socket = io.connect('http://' + document.domain + ':' + location.port + '/' + $s
         console.log("Now listening to " + namespace);
         console.log('http://' + document.domain + ':' + location.port + '/' + namespace);
         $scope.result = namespace;
-        socket.on('push', function (data) {
+        socket.on('senList', function (data) {
             // application logic ....
-            console.log(typeof(data));
+
             d = JSON.parse(data);
             // d = data;
             // var a = d.data.split(",");
             $scope.data = d;
             // $scope.data.avePre
-            console.log(typeof(d));
-            console.log(d);
+            console.log(data);
         });
     }
 

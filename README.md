@@ -9,7 +9,10 @@
 - [pip](https://pip.pypa.io/)
 
 ## Deploy
-
+```sh
+sudo apt-get install python-dev python-pip
+sudo apt-get install libbluetooth-dev
+```
 
 ```sh
 $ git clone adress

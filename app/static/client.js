@@ -17,14 +17,13 @@ app.controller('Ctrl', function($scope, socket) {
 
     socket.on('senList', function (data) {
         // application logic ....
+        console.log(data);
         d = JSON.parse(data);
         // d = data;
-
         // var a = d.data.split(",");
         $scope.sensors = d;
-        $scope.counts = Object.keys(d).length;
+        // $scope.counts = Object.keys(d).length;
         // $scope.data.avePre
-        console.log(d);
     });
 
     // scoket listenters

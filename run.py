@@ -1,6 +1,9 @@
 #!flask/bin/python
-from app import app
-from app import socketio
+from app import app, socketio
+# from app import socketio
+# from flask_socketio import SocketIO
+
+# socketio = SocketIO(app)
 
 app.debug=True
 app.threaded=True

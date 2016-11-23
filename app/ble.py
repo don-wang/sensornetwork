@@ -1028,7 +1028,7 @@ def fluentdInit():
 
 
 # main function
-def getData():
+def getBLEData():
 # if __name__ == "__main__":
     # reset bluetooth functionality
 # def resetBle():
