@@ -68,8 +68,6 @@ def listening():
                     node=5
                 else:
                     break
-                print seqNums
-                print sensors.seqNum
                 if seqNums[node] == sensors.seqNum:
                     print "repeated data, skip"
                     break
