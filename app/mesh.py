@@ -50,8 +50,8 @@ meshData = {
 header = False
 # sensor = '/dev/ttyUSB0'
 
-
-
+def scan():
+    return glob.glob('/dev/ttyUSB*')
 
 def Make_TxFrame(inBuf):
     outBuf = [binascii.a2b_hex("FF")] *  (20 + len(inBuf))
@@ -155,8 +155,6 @@ def meshDataReceived():
 
         if cmd == meshHexStatic["READ_REGISTER"]:
             # 読込応答
-
-
             print "Read Register"
             if reg == meshHexStatic["INDEX"]:
                 procedureNum =  meshHexStatic["IN_DATA"]
@@ -249,8 +247,10 @@ def startMesh():
     # else:
     #     Tx_WriteIndexClear()
 
-# sensor = scan()[0]
-# meshser = serial.Serial(sensor, 9600, timeout=None)
+sensors = scan()
+if len(sensors) > 0:
+    sensor = sensors[0]
+    meshser = serial.Serial(sensor, 9600, timeout=None)
     # print ord(cmd)
     # rcv = meshser.readline()
     # rcv = meshser.read(10)

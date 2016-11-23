@@ -30,7 +30,7 @@ oldData = {}
 sensorConf = {""}
 seqNums = [None] * 10
 # choose from BLE, Mesh, LoRa, Test
-module = "BLE"
+module = "Mesh"
 # Data format
                 # "time" : Data["time"][Data["num"]],
                 # "groupId": Data["groupId"][Data["num"]],
@@ -68,6 +68,8 @@ def listening():
                     node=5
                 else:
                     break
+                print seqNums
+                print sensors.seqNum
                 if seqNums[node] == sensors.seqNum:
                     print "repeated data, skip"
                     break
@@ -103,68 +105,6 @@ def listening():
                 f.close()
 
             time.sleep(1)
-                # if sensors.btAddress != "EBF78C6BC38E" and sensors.btAddress != "DDBAB3016E8C" and sensors.btAddress != "C35799CED2EA" and sensors.btAddress !="E2068C2BFF0C" and sensors.btAddress != "F8290B7902A5":
-                #     print sensors.btAddress
-                #     print "not required sensor, pass"
-                #     continue
-
-                # sample = {"btAddress": sensors.btAddress, "id": "node" + str(node)}
-                # if senList.has_key(sensors.btAddress) == False:                
-                #     senList[sensors.btAddress] = sample
-                #     namespace = "node" + str(node)
-                #     seqNums[sensors.btAddress] = sensors.seqNum;
-
-                #     f = open('./'+ sensors.btAddress +'.csv', 'a')
-                #     writer = csv.writer(f, lineterminator='\n')
-                #     line = ["'distance': "+ str(sensors.distance), "'val_pressure': "+ str(sensors.val_pressure) ," 'tick_register': " +str(sensors.tick_register) + " , 'seqNum':" +str(sensors.seqNum) ," 'val_di': " +str(sensors.val_di) ," 'val_ay': " +str(sensors.val_ay) ," 'val_ax': " + str(sensors.val_ax) ," 'val_heat': " +str(sensors.val_heat) ," 'val_humi': " +str(sensors.val_humi) ," 'sensor_type': '" +str(sensors.sensor_type) + "', 'btAddress': '" +str(sensors.btAddress) + "', 'val_battery': " +str(sensors.val_battery) ," 'val_light': " +str(sensors.val_light) ," 'gateway': '" +str(sensors.gateway) + "', 'rssi': " +str(sensors.rssi) ," 'flag_active': " +str(sensors.flag_active) ," 'val_az': " +str(sensors.val_az) ," 'val_temp': " +str(sensors.val_temp) ," 'val_noise': " +str(sensors.val_noise) ," 'tick_last_update': '" +str(sensors.tick_last_update) + "', 'val_uv': " +str(sensors.val_uv)]         
-                #     lineData = {'distance':  str(sensors.distance), 'val_pressure':  str(sensors.val_pressure) , 'tick_register': str(sensors.tick_register) , 'seqNum': str(sensors.seqNum) , 'val_di': str(sensors.val_di) , 'val_ay': str(sensors.val_ay) , 'val_ax':  str(sensors.val_ax) , 'val_heat': str(sensors.val_heat) , 'val_humi': str(sensors.val_humi) , 'sensor_type': str(sensors.sensor_type), 'btAddress': str(sensors.btAddress), 'val_battery': str(sensors.val_battery) , 'val_light': str(sensors.val_light) , 'gateway': str(sensors.gateway), 'rssi': str(sensors.rssi) , 'flag_active': str(sensors.flag_active) , 'val_az': str(sensors.val_az) , 'val_temp': str(sensors.val_temp) , 'val_noise': str(sensors.val_noise) , 'tick_last_update': str(sensors.tick_last_update), 'val_uv': str(sensors.val_uv)}
-                #     # line = json.dumps(sensors.__dict__)
-                #     senList[sensors.btAddress]['data'] = json.dumps(lineData)
-                #     oldData[sensors.btAddress] = lineData
-                #     print line
-
-                #     writer.writerow(line)
-                #     f.close()
-                #     print "new sensor data added"
-
-
-                # else:
-                #     namespace = senList[sensors.btAddress]['id']
-
-                #     if seqNums[sensors.btAddress] != sensors.seqNum:
-                #         seqNums[sensors.btAddress] = sensors.seqNum;
-                #         f = open('./'+ sensors.btAddress +'.csv', 'a')
-                #         writer = csv.writer(f, lineterminator='\n')
-                #         line = ["'distance': "+ str(sensors.distance), "'val_pressure': "+ str(sensors.val_pressure) ," 'tick_register': " +str(sensors.tick_register) + " , 'seqNum':" +str(sensors.seqNum) ," 'val_di': " +str(sensors.val_di) ," 'val_ay': " +str(sensors.val_ay) ," 'val_ax': " + str(sensors.val_ax) ," 'val_heat': " +str(sensors.val_heat) ," 'val_humi': " +str(sensors.val_humi) ," 'sensor_type': '" +str(sensors.sensor_type) + "', 'btAddress': '" +str(sensors.btAddress) + "', 'val_battery': " +str(sensors.val_battery) ," 'val_light': " +str(sensors.val_light) ," 'gateway': '" +str(sensors.gateway) + "', 'rssi': " +str(sensors.rssi) ," 'flag_active': " +str(sensors.flag_active) ," 'val_az': " +str(sensors.val_az) ," 'val_temp': " +str(sensors.val_temp) ," 'val_noise': " +str(sensors.val_noise) ," 'tick_last_update': '" +str(sensors.tick_last_update) + "', 'val_uv': " +str(sensors.val_uv)]  
-                #         lineData = {'distance':  str(sensors.distance), 'val_pressure':  str(sensors.val_pressure) , 'tick_register': str(sensors.tick_register) , 'seqNum': str(sensors.seqNum) , 'val_di': str(sensors.val_di) , 'val_ay': str(sensors.val_ay) , 'val_ax':  str(sensors.val_ax) , 'val_heat': str(sensors.val_heat) , 'val_humi': str(sensors.val_humi) , 'sensor_type': str(sensors.sensor_type), 'btAddress': str(sensors.btAddress), 'val_battery': str(sensors.val_battery) , 'val_light': str(sensors.val_light) , 'gateway': str(sensors.gateway), 'rssi': str(sensors.rssi) , 'flag_active': str(sensors.flag_active) , 'val_az': str(sensors.val_az) , 'val_temp': str(sensors.val_temp) , 'val_noise': str(sensors.val_noise) , 'tick_last_update': str(sensors.tick_last_update), 'val_uv': str(sensors.val_uv)}
-                #         # line = json.dumps(sensors.__dict__)
-                #         senList[sensors.btAddress]['data'] = json.dumps(lineData)
-                #         oldData[sensors.btAddress] = lineData
-                #         print line
-
-                #         writer.writerow(line)
-                        
-                #         f.close()
-                #         print "data updated"
-
-                #     else:
-                #         lineData = oldData[sensors.btAddress]
-                #         print "data existed"
-                #         print namespace
-
-                # socketio.emit('push', json.dumps(lineData), namespace='/node' + str(node))
-                # print "--------------------"
-                # print "pushed to Namespace: "            
-                # print 'node' + str(node)
-                # print "--------------------"
-                #     # socketio.emit('push', json.dumps(line), namespace='/' + namespace)            
-                # # dataSet = {"btAd" : str(sensors.btAddress), "temp": str(sensors.val_temp)}
-                # socketio.emit('senList', json.dumps(senList), namespace='/main')
-                # print "pushed to main"
-                # # socketio.emit('push', json.dumps(senList), namespace='/main')            
-                # # senList.append(sample)
-                # # print "current light is " + str(sensors.val_light)
-                # print "current sequnce is " + str(sensors.seqNum)
 
         elif module == "Mesh":
             global procedureNum
@@ -183,7 +123,7 @@ def listening():
                     socketio.emit('senList', json.dumps(meshData), namespace='/node5')
 
                     f = open('./mesh.txt', 'a')
-                    f.write(json.dumps(sensorData) + '\n')
+                    f.write(json.dumps(meshData) + '\n')
                     f.close()
 
         elif module == "LoRa":
