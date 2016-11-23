@@ -129,8 +129,9 @@ def listening():
                     socketio.emit('senList', json.dumps(senData), namespace='/node1')
                     socketio.emit('senList', json.dumps(senData), namespace='/node3')
                     socketio.emit('senList', json.dumps(senData), namespace='/node5')
-                time.sleep(5)
-
+                    f = open('./lora.txt', 'a')
+                    f.write(json.dumps(meshData) + '\n')
+                    f.close()
 
 
 # Open new thread for Listening function

@@ -117,9 +117,9 @@ def loRaDataReceived():
             if rxBufLoRa[3] == loraHexStatic["ASCII_COMMA"]:
                 loraData["time"][loraData["num"]] = time.strftime("%Y-%m-%d %H:%M:%S")
                 rssiString = rxBufLoRa[0:3]
-                seq = map(ord, rssiString)
-                rssiString = ''.join(chr(i) for i in seq)
-                loraData["rssi"][loraData["num"]] = int(rssiString)
+                # seq = map(ord, rssiString)
+                # rssiString = ''.join(chr(i) for i in seq)
+                # loraData["rssi"][loraData["num"]] = int(rssiString)
                 loraData["groupId"][loraData["num"]] = ord(rxBufLoRa[5]) << 8 + ord(rxBufLoRa[4])
                 loraData["nodeId"][loraData["num"]] = ord(rxBufLoRa[9]) << 24 + ord(rxBufLoRa[8]) << 16 +  ord(rxBufLoRa[7]) << 8 + ord(rxBufLoRa[6])
                 loraData["cmd"][loraData["num"]] = ord(rxBufLoRa[10])
@@ -134,9 +134,9 @@ def loRaDataReceived():
             else:
                 loraData["time"][loraData["num"]] = time.strftime("%Y-%m-%d %H:%M:%S")
                 rssiString = rxBufLoRa[0:4]
-                seq = map(ord, rssiString)
-                rssiString = ''.join(chr(i) for i in seq)
-                loraData["rssi"][loraData["num"]] = int(rssiString)
+                # seq = map(ord, rssiString)
+                # rssiString = ''.join(chr(i) for i in seq)
+                # loraData["rssi"][loraData["num"]] = int(rssiString)
                 loraData["groupId"][loraData["num"]] = ord(rxBufLoRa[6]) << 8 + ord(rxBufLoRa[5])
                 loraData["nodeId"][loraData["num"]] = ord(rxBufLoRa[10]) << 24 + ord(rxBufLoRa[9]) << 16 +  ord(rxBufLoRa[8]) << 8 + ord(rxBufLoRa[7])
                 loraData["cmd"][loraData["num"]] = ord(rxBufLoRa[11])
