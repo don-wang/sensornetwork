@@ -251,19 +251,10 @@ sensors = scan()
 if len(sensors) > 0:
     sensor = sensors[0]
     meshser = serial.Serial(sensor, 9600, timeout=None)
-    # print ord(cmd)
-    # rcv = meshser.readline()
-    # rcv = meshser.read(10)
-    # print rcv
-    # print meshser.inWaiting()
+
     # seq = map(ord, rxBuf)
     # print seq
-    # if seq[0] != 15 and seq[1] != 90:
-    #     continue
-    # buf = copy.copy(seq)
 
-    # pkt = parsePkt(seq)
-    # 
 
 # Tx_GwStart()
 # while  True:

@@ -18,6 +18,7 @@ from converter import *
 from ble import *
 from mesh import *
 from lora import *
+from moduleConf import module
 
 # def scan():
 #     return glob.glob('/dev/ttyUSB*') + glob.glob('/dev/ttyACM*')
@@ -30,19 +31,8 @@ oldData = {}
 sensorConf = {""}
 seqNums = [None] * 10
 # choose from BLE, Mesh, LoRa, Test
-module = "Mesh"
-# Data format
-                # "time" : Data["time"][Data["num"]],
-                # "groupId": Data["groupId"][Data["num"]],
-                # "cmd": Data["cmd"][Data["num"]],
-                # "seqNum": Data["seqNum"][Data["num"]],
-                # "status": Data["status"][Data["num"]],
-                # "temp": Data["temp"][Data["num"]],
-                # "humi": Data["humi"][Data["num"]],
-                # "light": Data["light"][Data["num"]],
-                # "press": Data["press"][Data["num"]],
-                # "sound": Data["sound"][Data["num"]],
-                # "bat": Data["bat"][Data["num"]]
+
+print "using module: " + module 
 def scan():
     return glob.glob('/dev/ttyUSB*')
 

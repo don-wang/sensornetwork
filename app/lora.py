@@ -39,7 +39,8 @@ logFlag = False
 initFlag = False
 # sensor = '/dev/ttyUSB0'
 
-
+def scan():
+    return glob.glob('/dev/ttyUSB*')
 
 def tsbCmdI_Click():
     print "send i"
@@ -189,9 +190,12 @@ def startLoRa():
     loRaDataReceived()
     time.sleep(1)
 
-
+sensors = scan()
+if len(sensors) > 0:
+    sensor = sensors[0]
+    loraser = serial.Serial(sensor, 115200, timeout=None)
 # sensor = scan()[0]
-# loraser = serial.Serial(sensor, 115200, timeout=None)
+
 
 # print "please press reset button"
 # while logFlag == False:

@@ -2,3 +2,4 @@ flask
 *.pyc
 *.csv
 *.txt
+app/moduleConf.py
