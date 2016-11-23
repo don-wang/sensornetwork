@@ -26,7 +26,7 @@ DEBUG = False
 INFINITE_LOOP = True
 USE_FLUENTD = False
 # True : use fluentd to upload data, False : directly upload data to influxDB
-SINGLE_LOOP_COUNT = 5
+SINGLE_LOOP_COUNT = 10
 LOOP_COUNT =  5
 # If INIFINITE_LOOP = False, Total aquired packet would be (SINGLE_LOOP_COUNT * LOOP_COUNT)
 
@@ -767,7 +767,6 @@ def parse_events(sock, loop_count=10):
     myFullList = []
     
     for i in xrange(0, loop_count):
-        print "try to read " + str(i)
         sock.settimeout(10)
         try:
             pkt = sock.recv(255)
@@ -847,13 +846,10 @@ def parse_events(sock, loop_count=10):
                     lock.release()
 
                 else:
-                    print "Not valid IM report"
                     pass
         else:
-            print "Not valid BLE ADVERTISING_REPORT"
             pass
     sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
-    print "after parse"
     return sensorBeaconList
 
 

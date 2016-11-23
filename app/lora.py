@@ -39,8 +39,6 @@ logFlag = False
 initFlag = False
 # sensor = '/dev/ttyUSB0'
 
-def scan():
-    return glob.glob('/dev/ttyUSB*')
 
 
 def tsbCmdI_Click():
@@ -154,22 +152,11 @@ def loRaDataReceived():
             logStringData2 = "receiving data"
             logFlag = True
             dgvFlag = True
-            # print Data["time"][Data["num"]] 
-            # print Data["groupId"][Data["num"]]
-            # print Data["cmd"][Data["num"]]
-            # print Data["seqNum"][Data["num"]]
-            # print Data["status"][Data["num"]]
-            # print Data["temp"][Data["num"]]
-            # print Data["humi"][Data["num"]]
-            # print Data["light"][Data["num"]]
-            # print Data["press"][Data["num"]]
-            # print Data["sound"][Data["num"]]
-            # print Data["bat"][Data["num"]]
-            # seq = map(ord, rxBufLoRa)
-            # print seq
+
             sensorData = {
                 "time" : loraData["time"][loraData["num"]],
                 "groupId": loraData["groupId"][loraData["num"]],
+                "nodeId": loraData["nodeId"][loraData["num"]],
                 "cmd": loraData["cmd"][loraData["num"]],
                 "seqNum": loraData["seqNum"][loraData["num"]],
                 "status": loraData["status"][loraData["num"]],
@@ -203,8 +190,8 @@ def startLoRa():
     time.sleep(1)
 
 
-sensor = scan()[0]
-loraser = serial.Serial(sensor, 115200, timeout=None)
+# sensor = scan()[0]
+# loraser = serial.Serial(sensor, 115200, timeout=None)
 
 # print "please press reset button"
 # while logFlag == False:

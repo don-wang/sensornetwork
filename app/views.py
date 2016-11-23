@@ -24,14 +24,13 @@ from lora import *
 
 # sensor = '/dev/ttyUSB0'
 clients = 0
-seqNums = {}
 fileList = []
 senList = {}
 oldData = {}
 sensorConf = {""}
-
+seqNums = [None] * 10
 # choose from BLE, Mesh, LoRa, Test
-module = "Mesh"
+module = "BLE"
 # Data format
                 # "time" : Data["time"][Data["num"]],
                 # "groupId": Data["groupId"][Data["num"]],
@@ -44,6 +43,8 @@ module = "Mesh"
                 # "press": Data["press"][Data["num"]],
                 # "sound": Data["sound"][Data["num"]],
                 # "bat": Data["bat"][Data["num"]]
+def scan():
+    return glob.glob('/dev/ttyUSB*')
 
 def listening():
     # global newTask
@@ -51,84 +52,126 @@ def listening():
         dataSet = []
 
         if module == "BLE":
+
+            node = 0
             returnedList = getBLEData()
             for sensors in returnedList:
-                if sensors.btAddress != "EBF78C6BC38E" and sensors.btAddress != "DDBAB3016E8C" and sensors.btAddress != "C35799CED2EA" and sensors.btAddress !="E2068C2BFF0C" and sensors.btAddress != "F8290B7902A5":
-                    print sensors.btAddress
-                    print "not required sensor, pass"
-                    continue
                 if sensors.btAddress == "EBF78C6BC38E":
                     node=1
-                if sensors.btAddress == "E2068C2BFF0C":
+                elif sensors.btAddress == "E2068C2BFF0C":
                     node=2
-                if sensors.btAddress == "DDBAB3016E8C":
+                elif sensors.btAddress == "DDBAB3016E8C":
                     node=3
-                if sensors.btAddress == "F8290B7902A5":
+                elif sensors.btAddress == "F8290B7902A5":
                     node=4
-                if sensors.btAddress == "C35799CED2EA":
+                elif sensors.btAddress == "C35799CED2EA":
                     node=5
-                sample = {"btAddress": sensors.btAddress, "id": "node" + str(node)}
-                if senList.has_key(sensors.btAddress) == False:                
-                    senList[sensors.btAddress] = sample
-                    namespace = "node" + str(node)
-                    seqNums[sensors.btAddress] = sensors.seqNum;
-
-                    f = open('./'+ sensors.btAddress +'.csv', 'a')
-                    writer = csv.writer(f, lineterminator='\n')
-                    line = ["'distance': "+ str(sensors.distance), "'val_pressure': "+ str(sensors.val_pressure) ," 'tick_register': " +str(sensors.tick_register) + " , 'seqNum':" +str(sensors.seqNum) ," 'val_di': " +str(sensors.val_di) ," 'val_ay': " +str(sensors.val_ay) ," 'val_ax': " + str(sensors.val_ax) ," 'val_heat': " +str(sensors.val_heat) ," 'val_humi': " +str(sensors.val_humi) ," 'sensor_type': '" +str(sensors.sensor_type) + "', 'btAddress': '" +str(sensors.btAddress) + "', 'val_battery': " +str(sensors.val_battery) ," 'val_light': " +str(sensors.val_light) ," 'gateway': '" +str(sensors.gateway) + "', 'rssi': " +str(sensors.rssi) ," 'flag_active': " +str(sensors.flag_active) ," 'val_az': " +str(sensors.val_az) ," 'val_temp': " +str(sensors.val_temp) ," 'val_noise': " +str(sensors.val_noise) ," 'tick_last_update': '" +str(sensors.tick_last_update) + "', 'val_uv': " +str(sensors.val_uv)]         
-                    lineData = {'distance':  str(sensors.distance), 'val_pressure':  str(sensors.val_pressure) , 'tick_register': str(sensors.tick_register) , 'seqNum': str(sensors.seqNum) , 'val_di': str(sensors.val_di) , 'val_ay': str(sensors.val_ay) , 'val_ax':  str(sensors.val_ax) , 'val_heat': str(sensors.val_heat) , 'val_humi': str(sensors.val_humi) , 'sensor_type': str(sensors.sensor_type), 'btAddress': str(sensors.btAddress), 'val_battery': str(sensors.val_battery) , 'val_light': str(sensors.val_light) , 'gateway': str(sensors.gateway), 'rssi': str(sensors.rssi) , 'flag_active': str(sensors.flag_active) , 'val_az': str(sensors.val_az) , 'val_temp': str(sensors.val_temp) , 'val_noise': str(sensors.val_noise) , 'tick_last_update': str(sensors.tick_last_update), 'val_uv': str(sensors.val_uv)}
-                    # line = json.dumps(sensors.__dict__)
-                    senList[sensors.btAddress]['data'] = json.dumps(lineData)
-                    oldData[sensors.btAddress] = lineData
-                    print line
-
-                    writer.writerow(line)
-                    f.close()
-                    print "new sensor data added"
-
-
                 else:
-                    namespace = senList[sensors.btAddress]['id']
+                    break
+                print seqNums
+                print sensors.seqNum
+                if seqNums[node] == sensors.seqNum:
+                    print "repeated data, skip"
+                    break
+                elif seqNums[node] == None:
+                    seqNums[node] = sensors.seqNum
+                    print seqNums
+                else:
+                    seqNums[node] = sensors.seqNum
 
-                    if seqNums[sensors.btAddress] != sensors.seqNum:
-                        seqNums[sensors.btAddress] = sensors.seqNum;
-                        f = open('./'+ sensors.btAddress +'.csv', 'a')
-                        writer = csv.writer(f, lineterminator='\n')
-                        line = ["'distance': "+ str(sensors.distance), "'val_pressure': "+ str(sensors.val_pressure) ," 'tick_register': " +str(sensors.tick_register) + " , 'seqNum':" +str(sensors.seqNum) ," 'val_di': " +str(sensors.val_di) ," 'val_ay': " +str(sensors.val_ay) ," 'val_ax': " + str(sensors.val_ax) ," 'val_heat': " +str(sensors.val_heat) ," 'val_humi': " +str(sensors.val_humi) ," 'sensor_type': '" +str(sensors.sensor_type) + "', 'btAddress': '" +str(sensors.btAddress) + "', 'val_battery': " +str(sensors.val_battery) ," 'val_light': " +str(sensors.val_light) ," 'gateway': '" +str(sensors.gateway) + "', 'rssi': " +str(sensors.rssi) ," 'flag_active': " +str(sensors.flag_active) ," 'val_az': " +str(sensors.val_az) ," 'val_temp': " +str(sensors.val_temp) ," 'val_noise': " +str(sensors.val_noise) ," 'tick_last_update': '" +str(sensors.tick_last_update) + "', 'val_uv': " +str(sensors.val_uv)]  
-                        lineData = {'distance':  str(sensors.distance), 'val_pressure':  str(sensors.val_pressure) , 'tick_register': str(sensors.tick_register) , 'seqNum': str(sensors.seqNum) , 'val_di': str(sensors.val_di) , 'val_ay': str(sensors.val_ay) , 'val_ax':  str(sensors.val_ax) , 'val_heat': str(sensors.val_heat) , 'val_humi': str(sensors.val_humi) , 'sensor_type': str(sensors.sensor_type), 'btAddress': str(sensors.btAddress), 'val_battery': str(sensors.val_battery) , 'val_light': str(sensors.val_light) , 'gateway': str(sensors.gateway), 'rssi': str(sensors.rssi) , 'flag_active': str(sensors.flag_active) , 'val_az': str(sensors.val_az) , 'val_temp': str(sensors.val_temp) , 'val_noise': str(sensors.val_noise) , 'tick_last_update': str(sensors.tick_last_update), 'val_uv': str(sensors.val_uv)}
-                        # line = json.dumps(sensors.__dict__)
-                        senList[sensors.btAddress]['data'] = json.dumps(lineData)
-                        oldData[sensors.btAddress] = lineData
-                        print line
+                sensorData = {
+                    "time" : time.strftime("%Y-%m-%d %H:%M:%S"),
+                    "groupId": sensors.gateway,
+                    "nodeId": node,
+                    "cmd": sensors.btAddress,
+                    "seqNum": sensors.seqNum,
+                    "status": sensors.flag_active,
+                    "temp": sensors.val_temp,
+                    "humi": sensors.val_humi,
+                    "light": sensors.val_light,
+                    "press": sensors.val_pressure,
+                    "sound": sensors.val_noise,
+                    "bat": sensors.val_battery
+                }
+                print sensorData
 
-                        writer.writerow(line)
+                socketio.emit('senList', json.dumps(sensorData), namespace='/main')
+                socketio.emit('senList', json.dumps(sensorData), namespace='/node1')
+                socketio.emit('senList', json.dumps(sensorData), namespace='/node3')
+                socketio.emit('senList', json.dumps(sensorData), namespace='/node5')
+
+                f = open('./ble.txt', 'a')
+                f.write(json.dumps(sensorData) + '\n')
+                f.close()
+
+            time.sleep(1)
+                # if sensors.btAddress != "EBF78C6BC38E" and sensors.btAddress != "DDBAB3016E8C" and sensors.btAddress != "C35799CED2EA" and sensors.btAddress !="E2068C2BFF0C" and sensors.btAddress != "F8290B7902A5":
+                #     print sensors.btAddress
+                #     print "not required sensor, pass"
+                #     continue
+
+                # sample = {"btAddress": sensors.btAddress, "id": "node" + str(node)}
+                # if senList.has_key(sensors.btAddress) == False:                
+                #     senList[sensors.btAddress] = sample
+                #     namespace = "node" + str(node)
+                #     seqNums[sensors.btAddress] = sensors.seqNum;
+
+                #     f = open('./'+ sensors.btAddress +'.csv', 'a')
+                #     writer = csv.writer(f, lineterminator='\n')
+                #     line = ["'distance': "+ str(sensors.distance), "'val_pressure': "+ str(sensors.val_pressure) ," 'tick_register': " +str(sensors.tick_register) + " , 'seqNum':" +str(sensors.seqNum) ," 'val_di': " +str(sensors.val_di) ," 'val_ay': " +str(sensors.val_ay) ," 'val_ax': " + str(sensors.val_ax) ," 'val_heat': " +str(sensors.val_heat) ," 'val_humi': " +str(sensors.val_humi) ," 'sensor_type': '" +str(sensors.sensor_type) + "', 'btAddress': '" +str(sensors.btAddress) + "', 'val_battery': " +str(sensors.val_battery) ," 'val_light': " +str(sensors.val_light) ," 'gateway': '" +str(sensors.gateway) + "', 'rssi': " +str(sensors.rssi) ," 'flag_active': " +str(sensors.flag_active) ," 'val_az': " +str(sensors.val_az) ," 'val_temp': " +str(sensors.val_temp) ," 'val_noise': " +str(sensors.val_noise) ," 'tick_last_update': '" +str(sensors.tick_last_update) + "', 'val_uv': " +str(sensors.val_uv)]         
+                #     lineData = {'distance':  str(sensors.distance), 'val_pressure':  str(sensors.val_pressure) , 'tick_register': str(sensors.tick_register) , 'seqNum': str(sensors.seqNum) , 'val_di': str(sensors.val_di) , 'val_ay': str(sensors.val_ay) , 'val_ax':  str(sensors.val_ax) , 'val_heat': str(sensors.val_heat) , 'val_humi': str(sensors.val_humi) , 'sensor_type': str(sensors.sensor_type), 'btAddress': str(sensors.btAddress), 'val_battery': str(sensors.val_battery) , 'val_light': str(sensors.val_light) , 'gateway': str(sensors.gateway), 'rssi': str(sensors.rssi) , 'flag_active': str(sensors.flag_active) , 'val_az': str(sensors.val_az) , 'val_temp': str(sensors.val_temp) , 'val_noise': str(sensors.val_noise) , 'tick_last_update': str(sensors.tick_last_update), 'val_uv': str(sensors.val_uv)}
+                #     # line = json.dumps(sensors.__dict__)
+                #     senList[sensors.btAddress]['data'] = json.dumps(lineData)
+                #     oldData[sensors.btAddress] = lineData
+                #     print line
+
+                #     writer.writerow(line)
+                #     f.close()
+                #     print "new sensor data added"
+
+
+                # else:
+                #     namespace = senList[sensors.btAddress]['id']
+
+                #     if seqNums[sensors.btAddress] != sensors.seqNum:
+                #         seqNums[sensors.btAddress] = sensors.seqNum;
+                #         f = open('./'+ sensors.btAddress +'.csv', 'a')
+                #         writer = csv.writer(f, lineterminator='\n')
+                #         line = ["'distance': "+ str(sensors.distance), "'val_pressure': "+ str(sensors.val_pressure) ," 'tick_register': " +str(sensors.tick_register) + " , 'seqNum':" +str(sensors.seqNum) ," 'val_di': " +str(sensors.val_di) ," 'val_ay': " +str(sensors.val_ay) ," 'val_ax': " + str(sensors.val_ax) ," 'val_heat': " +str(sensors.val_heat) ," 'val_humi': " +str(sensors.val_humi) ," 'sensor_type': '" +str(sensors.sensor_type) + "', 'btAddress': '" +str(sensors.btAddress) + "', 'val_battery': " +str(sensors.val_battery) ," 'val_light': " +str(sensors.val_light) ," 'gateway': '" +str(sensors.gateway) + "', 'rssi': " +str(sensors.rssi) ," 'flag_active': " +str(sensors.flag_active) ," 'val_az': " +str(sensors.val_az) ," 'val_temp': " +str(sensors.val_temp) ," 'val_noise': " +str(sensors.val_noise) ," 'tick_last_update': '" +str(sensors.tick_last_update) + "', 'val_uv': " +str(sensors.val_uv)]  
+                #         lineData = {'distance':  str(sensors.distance), 'val_pressure':  str(sensors.val_pressure) , 'tick_register': str(sensors.tick_register) , 'seqNum': str(sensors.seqNum) , 'val_di': str(sensors.val_di) , 'val_ay': str(sensors.val_ay) , 'val_ax':  str(sensors.val_ax) , 'val_heat': str(sensors.val_heat) , 'val_humi': str(sensors.val_humi) , 'sensor_type': str(sensors.sensor_type), 'btAddress': str(sensors.btAddress), 'val_battery': str(sensors.val_battery) , 'val_light': str(sensors.val_light) , 'gateway': str(sensors.gateway), 'rssi': str(sensors.rssi) , 'flag_active': str(sensors.flag_active) , 'val_az': str(sensors.val_az) , 'val_temp': str(sensors.val_temp) , 'val_noise': str(sensors.val_noise) , 'tick_last_update': str(sensors.tick_last_update), 'val_uv': str(sensors.val_uv)}
+                #         # line = json.dumps(sensors.__dict__)
+                #         senList[sensors.btAddress]['data'] = json.dumps(lineData)
+                #         oldData[sensors.btAddress] = lineData
+                #         print line
+
+                #         writer.writerow(line)
                         
-                        f.close()
-                        print "data updated"
+                #         f.close()
+                #         print "data updated"
 
-                    else:
-                        lineData = oldData[sensors.btAddress]
-                        print "data existed"
-                        print namespace
+                #     else:
+                #         lineData = oldData[sensors.btAddress]
+                #         print "data existed"
+                #         print namespace
 
-                socketio.emit('push', json.dumps(lineData), namespace='/node' + str(node))
-                print "--------------------"
-                print "pushed to Namespace: "            
-                print 'node' + str(node)
-                print "--------------------"
-                    # socketio.emit('push', json.dumps(line), namespace='/' + namespace)            
-                # dataSet = {"btAd" : str(sensors.btAddress), "temp": str(sensors.val_temp)}
-                socketio.emit('senList', json.dumps(senList), namespace='/main')
-                print "pushed to main"
-                # socketio.emit('push', json.dumps(senList), namespace='/main')            
-                # senList.append(sample)
-                # print "current light is " + str(sensors.val_light)
-                print "current sequnce is " + str(sensors.seqNum)
+                # socketio.emit('push', json.dumps(lineData), namespace='/node' + str(node))
+                # print "--------------------"
+                # print "pushed to Namespace: "            
+                # print 'node' + str(node)
+                # print "--------------------"
+                #     # socketio.emit('push', json.dumps(line), namespace='/' + namespace)            
+                # # dataSet = {"btAd" : str(sensors.btAddress), "temp": str(sensors.val_temp)}
+                # socketio.emit('senList', json.dumps(senList), namespace='/main')
+                # print "pushed to main"
+                # # socketio.emit('push', json.dumps(senList), namespace='/main')            
+                # # senList.append(sample)
+                # # print "current light is " + str(sensors.val_light)
+                # print "current sequnce is " + str(sensors.seqNum)
 
         elif module == "Mesh":
             global procedureNum
             global meshList
-            # sensor = scan()[0]
+            sensor = scan()[0]
             meshser = serial.Serial(sensor, 9600, timeout=None)
             time.sleep(3)
             Tx_GwStart()
@@ -141,8 +184,13 @@ def listening():
                     socketio.emit('senList', json.dumps(meshData), namespace='/node3')
                     socketio.emit('senList', json.dumps(meshData), namespace='/node5')
 
+                    f = open('./mesh.txt', 'a')
+                    f.write(json.dumps(sensorData) + '\n')
+                    f.close()
+
         elif module == "LoRa":
             global logFlag
+            sensor = scan()[0]
             loraser = serial.Serial(sensor, 115200, timeout=None)
             time.sleep(3)
             startLoRa()

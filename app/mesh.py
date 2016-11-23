@@ -50,8 +50,7 @@ meshData = {
 header = False
 # sensor = '/dev/ttyUSB0'
 
-def scan():
-    return glob.glob('/dev/ttyUSB*')
+
 
 
 def Make_TxFrame(inBuf):
@@ -199,6 +198,7 @@ def meshDataReceived():
                 sensorData = {
                     "time" : meshData["time"][meshData["num"]],
                     "groupId": meshData["groupId"][meshData["num"]],
+                    "nodeId": meshData["nodeId"][meshData["num"]],
                     "cmd": meshData["cmd"][meshData["num"]],
                     "seqNum": meshData["seqNum"][meshData["num"]],
                     "status": meshData["status"][meshData["num"]],
@@ -249,10 +249,8 @@ def startMesh():
     # else:
     #     Tx_WriteIndexClear()
 
-
-
-sensor = scan()[0]
-meshser = serial.Serial(sensor, 9600, timeout=None)
+# sensor = scan()[0]
+# meshser = serial.Serial(sensor, 9600, timeout=None)
     # print ord(cmd)
     # rcv = meshser.readline()
     # rcv = meshser.read(10)
