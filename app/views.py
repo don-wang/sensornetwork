@@ -130,7 +130,7 @@ def listening():
                     socketio.emit('senList', json.dumps(senData), namespace='/node3')
                     socketio.emit('senList', json.dumps(senData), namespace='/node5')
                     f = open('./lora.txt', 'a')
-                    f.write(json.dumps(meshData) + '\n')
+                    f.write(json.dumps(senData) + '\n')
                     f.close()
 
 
