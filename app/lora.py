@@ -72,7 +72,6 @@ def loRaDataReceived():
                 timeout = True;
                 break
         if timeout == True:
-            print "time out"
             break
         else:
             if lenBuf + 1 >= len(rxBufLoRa):
