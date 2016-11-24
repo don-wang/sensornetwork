@@ -113,7 +113,7 @@ def listening():
                 if meshData != None:
                     print meshData
                     socketio.emit('senList', json.dumps(meshData), namespace='/main')
-                    socketio.emit('senList', json.dumps(sensorData), namespace='/node' + str(meshData["nodeId"]))
+                    socketio.emit('senList', json.dumps(meshData), namespace='/node' + str(meshData["nodeId"]))
 
                     f = open('./app/data/mesh.txt', 'a')
                     f.write(json.dumps(meshData) + '\n')
@@ -129,9 +129,8 @@ def listening():
                 senData = loRaDataReceived()
                 if senData != None:
                     print senData
-
                     socketio.emit('senList', json.dumps(senData), namespace='/main')
-                    socketio.emit('senList', json.dumps(sensorData), namespace='/node' + str(meshData["nodeId"]))
+                    socketio.emit('senList', json.dumps(senData), namespace='/node' + str(senData["nodeId"]))
                     f = open('./app/data/lora.txt', 'a')
                     f.write(json.dumps(senData) + '\n')
                     f.close()
