@@ -139,8 +139,7 @@ def meshDataReceived():
                 print "time out"
                 break
             else:
-                if lenBuf >= len(rxBuf):
-                    rxBuf = rxBuf[1:]
+                if lenBuf +1 >= len(rxBuf):
                     rxBuf.append(binascii.a2b_hex("FF"))
                 rxBuf[lenBuf] = meshser.read(1);
                 lenBuf = lenBuf + 1
@@ -233,6 +232,7 @@ def meshDataReceived():
 def startMesh():
     global procedureNum
     result = meshDataReceived()
+    meshList = None
     if result != None:
         meshList = result[0]
         procedureNum = result[1]
@@ -242,7 +242,8 @@ def startMesh():
         Tx_ReadInData(1)
     elif procedureNum == meshHexStatic["INDEX_CLEAR"]:
         Tx_WriteIndexClear()
-        return meshList
+        if meshList != None:
+            return meshList
     time.sleep(3)
     # else:
     #     Tx_WriteIndexClear()
