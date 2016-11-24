@@ -56,6 +56,15 @@ def listening():
                     node=4
                 elif sensors.btAddress == "C35799CED2EA":
                     node=5
+                elif sensors.btAddress == "C2605AE06AEB":
+                    node=7
+                elif sensors.btAddress == "C5E1BF3F271D":
+                    node=8
+                elif sensors.btAddress == "CC707F9CC2B3":
+                    node=9
+                elif sensors.btAddress == "F07CDF1F5687":
+                    node=10
+
                 else:
                     break
                 if seqNums[node] == sensors.seqNum:
@@ -84,11 +93,9 @@ def listening():
                 print sensorData
 
                 socketio.emit('senList', json.dumps(sensorData), namespace='/main')
-                socketio.emit('senList', json.dumps(sensorData), namespace='/node1')
-                socketio.emit('senList', json.dumps(sensorData), namespace='/node3')
-                socketio.emit('senList', json.dumps(sensorData), namespace='/node5')
+                socketio.emit('senList', json.dumps(sensorData), namespace='/node' + str(node))
 
-                f = open('./ble.txt', 'a')
+                f = open('./app/data/ble.txt', 'a')
                 f.write(json.dumps(sensorData) + '\n')
                 f.close()
 
@@ -106,11 +113,9 @@ def listening():
                 if meshData != None:
                     print meshData
                     socketio.emit('senList', json.dumps(meshData), namespace='/main')
-                    socketio.emit('senList', json.dumps(meshData), namespace='/node1')
-                    socketio.emit('senList', json.dumps(meshData), namespace='/node3')
-                    socketio.emit('senList', json.dumps(meshData), namespace='/node5')
+                    socketio.emit('senList', json.dumps(sensorData), namespace='/node' + str(meshData["nodeId"]))
 
-                    f = open('./mesh.txt', 'a')
+                    f = open('./app/data/mesh.txt', 'a')
                     f.write(json.dumps(meshData) + '\n')
                     f.close()
 
@@ -126,10 +131,8 @@ def listening():
                     print senData
 
                     socketio.emit('senList', json.dumps(senData), namespace='/main')
-                    socketio.emit('senList', json.dumps(senData), namespace='/node1')
-                    socketio.emit('senList', json.dumps(senData), namespace='/node3')
-                    socketio.emit('senList', json.dumps(senData), namespace='/node5')
-                    f = open('./lora.txt', 'a')
+                    socketio.emit('senList', json.dumps(sensorData), namespace='/node' + str(meshData["nodeId"]))
+                    f = open('./app/data/lora.txt', 'a')
                     f.write(json.dumps(senData) + '\n')
                     f.close()
 
@@ -159,6 +162,12 @@ def change(data):
     senList[data['sensor']]['id'] = data['newName']
     print "name changed from " + senList[data['sensor']]['id'] + " to " + data['newName']
 
+
+@socketio.on('connect', namespace='/node0')
+def node0():
+    print "start node0"
+    print "\n"
+
 @socketio.on('connect', namespace='/node1')
 def node1():
     print "start node1"
@@ -168,24 +177,47 @@ def node1():
 @socketio.on('connect', namespace='/node2')
 def node2():
     print "start node2"
-    pass
+    print "\n"
 
 @socketio.on('connect', namespace='/node3')
 def node3():
     print "start node3"
     print "\n"
 
-
 @socketio.on('connect', namespace='/node4')
 def node4():
     print "start node4"
-    pass
+    print "\n"
 
 @socketio.on('connect', namespace='/node5')
 def node5():
     print "start node5"
     print "\n"
 
+@socketio.on('connect', namespace='/node6')
+def node6():
+    print "start node6"
+    print "\n"
+
+@socketio.on('connect', namespace='/node7')
+def node7():
+    print "start node7"
+    print "\n"
+
+@socketio.on('connect', namespace='/node8')
+def node8():
+    print "start node8"
+    print "\n"
+
+@socketio.on('connect', namespace='/node9')
+def node9():
+    print "start node9"
+    print "\n"
+
+@socketio.on('connect', namespace='/node10')
+def node10():
+    print "start node10"
+    print "\n"
 
 @socketio.on('my event')
 def test_message(message):
