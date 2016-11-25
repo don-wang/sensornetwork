@@ -86,7 +86,7 @@ def listening():
                     "temp": sensors.val_temp,
                     "humi": sensors.val_humi,
                     "light": sensors.val_light,
-                    "press": sensors.val_pressure,
+                    "press": sensors.val_pressure * 10.0,
                     "sound": sensors.val_noise,
                     "bat": sensors.val_battery
                 }
