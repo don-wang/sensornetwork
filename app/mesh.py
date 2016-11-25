@@ -165,7 +165,7 @@ def meshDataReceived():
                     print "Data empty, read again"
                     procedureNum =  meshHexStatic["IN_DATA"]
                     return [None, procedureNum]
-                addr = ord(rxBuf[11]) << 24 + ord(rxBuf[10]) << 16 +  ord(rxBuf[9]) << 8 + ord(rxBuf[8])
+                addr = (ord(rxBuf[11]) << 24) + (ord(rxBuf[10]) << 16) +  (ord(rxBuf[9]) << 8) + ord(rxBuf[8])
                 flag = False
                 for x in xrange(0, maxConnect):
                     if meshData["enable"][x] == True:
@@ -181,7 +181,7 @@ def meshDataReceived():
                             break
 
                 meshData["time"][meshData["num"]] = time.strftime("%Y-%m-%d %H:%M:%S")
-                meshData["groupId"][meshData["num"]] = ord(rxBuf[7]) << 8 + ord(rxBuf[6])
+                meshData["groupId"][meshData["num"]] = (ord(rxBuf[7]) << 8) + ord(rxBuf[6])
                 meshData["cmd"][meshData["num"]] = ord(rxBuf[12])
                 meshData["seqNum"][meshData["num"]] = ord(rxBuf[13])
                 meshData["status"][meshData["num"]] = ord(rxBuf[15]) << 8 + ord(rxBuf[14])
